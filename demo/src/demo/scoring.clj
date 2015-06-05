@@ -26,3 +26,10 @@
   [s]
   (.getLogProb google-lm (tokenize s)))
 
+(defn score-spans-by-blm
+  [s n]
+  (loop [remain (tokenize s)
+         result []]
+    (if (empty? remain)
+      result
+      (recur (rest remain) (conj result (.getLogProb google-lm (take n remain)))))))
