@@ -1,10 +1,12 @@
 (defproject demo "0.1.0-SNAPSHOT"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
-  :min-lein-version "2.0.0"
+  :jvm-opts ["-Xmx9g" "-server"]
+  :repositories {"local" ~(str (.toURI (java.io.File. "local_mvn_repo")))}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [compojure "1.3.1"]
                  [ring/ring-defaults "0.1.2"]
-                 [clojure-opennlp "0.3.3"]]
+                 [clojure-opennlp "0.3.3"]
+                 [berkeleylm/berkeleylm "1.1.5"]]
   :plugins [[lein-ring "0.8.13"]]
   :ring {:handler demo.handler/app})
