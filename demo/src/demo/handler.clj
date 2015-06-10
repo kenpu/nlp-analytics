@@ -16,17 +16,16 @@
 
 (defroutes app-routes
   (POST "/score-sentence/" request
-        (let [sentence (:sentence request)
+        (let [sentence (str (:sentence request))
               method (:method request)
               includeSpanScores (:includeSpanScores request)
-              spanNgram (:spanNgram request)
-              result {
-                      :words (tokenize (str sentence))
-                      :sentenceScore (determine-method method (str sentence))
-                      }]
-          (if (true? includeSpanScores)
-            (assoc result (score-spans-by-blm (str sentence) spanNgram))
-            result)))
+              spanNgram (:spanNgram request)]
+          {:status 200
+           :body {:words (tokenize sentence)
+                  :sentenceScore (determine-method method sentence)
+                  :spanNgram (if (true? includeSpanScores)
+                               (vector (score-spans-by-blm sentence spanNgram))
+                               [])}}))
   (route/not-found "Not Found"))
 
 (def app
