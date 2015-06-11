@@ -12,20 +12,47 @@
     "pos-maxent" (score-by-pos-maxent sentence)
     "pos-perceptron" (score-by-pos-perceptron sentence)
     "blm" (score-by-blm sentence)
-    (str "Invalid method selection")))
+    (str "Invalid method selection: " method)))
+
+(defn score-sentence
+  [sentence method includeSpanScores spanNgram]
+  {:words (tokenize sentence)
+   :sentenceScore (determine-method method sentence)
+   :spanScores (if includeSpanScores
+                (vector (score-spans-by-blm sentence spanNgram))
+                [])})
+
+(defn score-text
+  [text method includeSpanScores spanNgram]
+  (loop [remain (get-sentences text) result []]
+    (if (empty? remain)
+      result
+      (recur (rest remain) (conj result {:sentence (first remain)
+                                         :words (tokenize (first remain))
+                                         :sentenceScore (determine-method method (first remain))
+                                         :spanScores (if includeSpanScores
+                                                       (vector (score-spans-by-blm (first remain spanNgram)))
+                                                       [])})))))
+
+(defn param
+  [request name]
+  (get-in request [:params name]))
 
 (defroutes app-routes
   (POST "/score-sentence/" request
-        (let [sentence (str (:sentence request))
+        (let [sentence (param request :sentence)
+              method (param request :method)
+              includeSpanScores (param request :includeSpanScores)
+              spanNgram (param request :span)]
+          {:status 200
+           :body (score-sentence sentence method includeSpanScores spanNgram)}))
+  (POST "/score-text/" request
+        (let [text (str (:text request))
               method (:method request)
               includeSpanScores (:includeSpanScores request)
               spanNgram (:spanNgram request)]
           {:status 200
-           :body {:words (tokenize sentence)
-                  :sentenceScore (determine-method method sentence)
-                  :spanNgram (if (true? includeSpanScores)
-                               (vector (score-spans-by-blm sentence spanNgram))
-                               [])}}))
+           :body {:result (score-text text method includeSpanScores spanNgram)}}))
   (route/not-found "Not Found"))
 
 (def app
