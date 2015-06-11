@@ -14,13 +14,22 @@
     "blm" (score-by-blm sentence)
     (str "Invalid method selection: " method)))
 
+(defn param
+  [request name]
+  (get-in request [:params name]))
+
+(defn get-span-scores
+  [includeSpanScores sentence spanNgram]
+  (if includeSpanScores
+    (vector (score-spans-by-blm sentence spanNgram))
+    [])
+  )
+
 (defn score-sentence
   [sentence method includeSpanScores spanNgram]
   {:words (tokenize sentence)
    :sentenceScore (determine-method method sentence)
-   :spanScores (if includeSpanScores
-                (vector (score-spans-by-blm sentence spanNgram))
-                [])})
+   :spanScores (get-span-scores includeSpanScores sentence spanNgram)})
 
 (defn score-text
   [text method includeSpanScores spanNgram]
@@ -30,27 +39,21 @@
       (recur (rest remain) (conj result {:sentence (first remain)
                                          :words (tokenize (first remain))
                                          :sentenceScore (determine-method method (first remain))
-                                         :spanScores (if includeSpanScores
-                                                       (vector (score-spans-by-blm (first remain spanNgram)))
-                                                       [])})))))
-
-(defn param
-  [request name]
-  (get-in request [:params name]))
+                                         :spanScores (get-span-scores includeSpanScores (first remain) spanNgram)})))))
 
 (defroutes app-routes
   (POST "/score-sentence/" request
         (let [sentence (param request :sentence)
               method (param request :method)
               includeSpanScores (param request :includeSpanScores)
-              spanNgram (param request :span)]
+              spanNgram (Integer/parseInt (param request :spanNgram))]
           {:status 200
            :body (score-sentence sentence method includeSpanScores spanNgram)}))
   (POST "/score-text/" request
-        (let [text (str (:text request))
-              method (:method request)
-              includeSpanScores (:includeSpanScores request)
-              spanNgram (:spanNgram request)]
+        (let [text (param request :text)
+              method (param request :method)
+              includeSpanScores (param request :includeSpanScores)
+              spanNgram (Integer/parseInt (param request :spanNgram))]
           {:status 200
            :body {:result (score-text text method includeSpanScores spanNgram)}}))
   (route/not-found "Not Found"))
