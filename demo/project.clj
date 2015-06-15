@@ -10,4 +10,5 @@
                  [ring/ring-defaults "0.1.2"]
                  [ring/ring-json "0.3.1"]]
   :plugins [[lein-ring "0.8.13"]]
-  :ring {:handler demo.handler/app})
+;;  :ring {:handler demo.handler/app})
+  :ring {:handler demo.demoHandler/app})

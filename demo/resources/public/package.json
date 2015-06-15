@@ -1,0 +1,19 @@
+{
+	"name": "demo",
+	"version": "0.0.1",
+	"dependencies": {
+		"react": "^0.13.3",
+		"object-assign": "^1.0.0",
+		"sprintf": "0.1.5"
+	},
+	"devDependencies": {
+		"reactify": "^0.15.2",
+		"envify": "^3.0.0"
+	},
+	"scripts": {
+		"start": "watchify -o bundle.js -v -d -e ./demo.js"
+	},
+	"browserify": {
+		"transform": ["reactify", "envify"]
+	}
+}
