@@ -30,6 +30,8 @@ var Reply = React.createClass({
 			var blm = reply[blmName];
 			var spanSize = idx + 1; // TODO modify reply so server provides this.
 			blm.spanScores.forEach(function(score, wordIndex) {
+				if(typeof(score) != "number")
+					score = -1000
 				scoresView.push(makeRow({
 					content: (<span>{sprintf("%.3f",score)}</span>),
 					offset: wordIndex,
