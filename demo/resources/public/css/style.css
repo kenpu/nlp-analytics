@@ -27,3 +27,12 @@ hr {
 	font-family: "sans-serif";
 	font-size: 7pt;
 }
+
+span.word {
+	width: 100%;
+	display: inline-block;
+	background: #ccc;
+	padding: 3px;
+	text-align: center;
+	font-weight: bold;
+}

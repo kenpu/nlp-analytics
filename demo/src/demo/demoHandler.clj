@@ -6,7 +6,7 @@
             [ring.util.response :as resp])
   (:use demo.scoring))
 
-(def goog-lm (make-google-lm-fake))
+(def goog-lm (make-google-lm))
 (def root (str (System/getProperty "user.dir") "/resources/public"))
 
 (defn param
