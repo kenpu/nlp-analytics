@@ -20,11 +20,11 @@
   (let [words (tokenize sentence)]
     {:status 200
      :body {:words words
-            :blm_1 (assoc (score-by-blm {:words words :N 1 :includeSpanScores "yes" :lm goog-lm}) :n 1)
-            :blm_2 (assoc (score-by-blm {:words words :N 2 :includeSpanScores "yes" :lm goog-lm}) :n 2)
-            :blm_3 (assoc (score-by-blm {:words words :N 3 :includeSpanScores "yes" :lm goog-lm}) :n 3)
-            :blm_4 (assoc (score-by-blm {:words words :N 4 :includeSpanScores "yes" :lm goog-lm}) :n 4)
-            :blm_5 (assoc (score-by-blm {:words words :N 5 :includeSpanScores "yes" :lm goog-lm}) :n 5) }})) 
+            :blm_1 (assoc (score-by-blm {:words words :N 1 :includeSpanScores "yes" :lm goog-lm}) :spanSize 1)
+            :blm_2 (assoc (score-by-blm {:words words :N 2 :includeSpanScores "yes" :lm goog-lm}) :spanSize 2)
+            :blm_3 (assoc (score-by-blm {:words words :N 3 :includeSpanScores "yes" :lm goog-lm}) :spanSize 3)
+            :blm_4 (assoc (score-by-blm {:words words :N 4 :includeSpanScores "yes" :lm goog-lm}) :spanSize 4)
+            :blm_5 (assoc (score-by-blm {:words words :N 5 :includeSpanScores "yes" :lm goog-lm}) :spanSize 5) }})) 
 
 (defroutes app-routes
   (route/files "/" {:root root})
