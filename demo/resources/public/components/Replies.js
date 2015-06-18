@@ -28,7 +28,8 @@ var Reply = React.createClass({
 		var scoresView = [];
 		["blm_1", "blm_2", "blm_3", "blm_4", "blm_5"].forEach(function(blmName, idx) {
 			var blm = reply[blmName];
-			var spanSize = idx + 1; // TODO modify reply so server provides this.
+			var spanSize = blm.spanSize;
+			scoresView.push(<tr>{Words}</tr>);
 			blm.spanScores.forEach(function(score, wordIndex) {
 				if(typeof(score) != "number")
 					score = -1000
@@ -40,13 +41,11 @@ var Reply = React.createClass({
 					totalLength: totalLength,
 				}));
 			});
-			scoresView.push(<tr>{Words}</tr>);
 		});
 
 		return (
 			<table className="table table-bordered">
 				<tbody>
-					<tr>{Words}</tr>
 					{scoresView}
 				</tbody>
 			</table>
