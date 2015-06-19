@@ -1,6 +1,13 @@
 var React = require('react');
 var store = require('../store');
 var Replies = require('./Replies');
+var Samples = require('./Samples');
+
+var samples = [
+	"---",
+	"Hello there, my name is Albert Einsten.",
+	"Go away, I am thinking on a hard Physics problem.",
+];
 
 var Demo = React.createClass({
 	getInitialState: function() {
@@ -17,6 +24,10 @@ var Demo = React.createClass({
 	},
 	onTyping: function(e) {
 		store.getState().sentence = e.target.value;
+		store.emitChange();
+	},
+	onChoose: function(sentence) {
+		store.getState().sentence = sentence;
 		store.emitChange();
 	},
 	onSubmit: function(e) {
@@ -47,9 +58,14 @@ var Demo = React.createClass({
 				<h1>Sentence Scoring</h1>
 				<hr />
 
-				<div className="text-area">
-					<textarea onChange={this.onTyping} 
-								value={this.state.sentence} />
+				<div className="row">
+					<div className="text-area col-md-7">
+						<textarea onChange={this.onTyping} 
+									value={this.state.sentence} />
+					</div>
+					<div className="sample-area col-md-5">
+						<Samples samples={samples} onChoose={this.onChoose} />
+					</div>
 				</div>
 
 				<button className="btn btn-primary" onClick={this.onSubmit}>
