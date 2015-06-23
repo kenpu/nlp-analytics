@@ -4,9 +4,10 @@ var Replies = require('./Replies');
 var Samples = require('./Samples');
 
 var samples = [
-	"---",
-	"Hello there, my name is Albert Einsten.",
-	"Go away, I am thinking on a hard Physics problem.",
+	"",
+	"I like to take long walks on the beach.",
+	"I like to take long walks on the the beach.",
+	"I like to take purple walks on the beach.",
 ];
 
 var Demo = React.createClass({
