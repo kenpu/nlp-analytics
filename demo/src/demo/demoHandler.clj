@@ -17,20 +17,33 @@
 (defn score-sentence
   "Returns n-gram scores of sentence for n 1 through 5"
   [sentence]
-  (let [words (tokenize sentence)]
+  (let [words (tokenize sentence)
+        blm1 (score-by-blm {:words words :N 1 :includeSpanScores "yes" :lm goog-lm})
+        blm2 (score-by-blm {:words words :N 2 :includeSpanScores "yes" :lm goog-lm})
+        blm3 (score-by-blm {:words words :N 3 :includeSpanScores "yes" :lm goog-lm})
+        blm4 (score-by-blm {:words words :N 4 :includeSpanScores "yes" :lm goog-lm})
+        blm5 (score-by-blm {:words words :N 5 :includeSpanScores "yes" :lm goog-lm})]
     {:status 200
      :body {:words words
-            :blm_1 (assoc (score-by-blm {:words words :N 1 :includeSpanScores "yes" :lm goog-lm}) :spanSize 1)
-            :blm_2 (assoc (score-by-blm {:words words :N 2 :includeSpanScores "yes" :lm goog-lm}) :spanSize 2)
-            :blm_3 (assoc (score-by-blm {:words words :N 3 :includeSpanScores "yes" :lm goog-lm}) :spanSize 3)
-            :blm_4 (assoc (score-by-blm {:words words :N 4 :includeSpanScores "yes" :lm goog-lm}) :spanSize 4)
-            :blm_5 (assoc (score-by-blm {:words words :N 5 :includeSpanScores "yes" :lm goog-lm}) :spanSize 5) }})) 
+            :blm_1 (assoc blm1 :spanSize 1 :deviations (get-standard-deviations (:spanScores blm1)))
+            :blm_2 (assoc blm2 :spanSize 2 :deviations (get-standard-deviations (:spanScores blm2)))
+            :blm_3 (assoc blm3 :spanSize 3 :deviations (get-standard-deviations (:spanScores blm3)))
+            :blm_4 (assoc blm4 :spanSize 4 :deviations (get-standard-deviations (:spanScores blm4)))
+            :blm_5 (assoc blm5 :spanSize 5 :deviations (get-standard-deviations (:spanScores blm5)))}}))
 
 (defroutes app-routes
   (route/files "/" {:root root})
   (POST "/score/" request
         (let [sentence (param request :sentence)]
           (score-sentence sentence)))
+  (POST "/score-maxent/" request
+        (let [sentence (param request :sentence)]
+          {:status 200
+           :body {:maxent (score-by-pos-maxent (tokenize sentence) "yes")}}))
+  (POST "/score-perceptron/" request
+        (let [sentence (param request :sentence)]
+          {:status 200
+           :body {:perceptron (score-by-pos-perceptron (tokenize sentence) "yes")}}))
   (route/not-found "Not Found"))
 
 (def app

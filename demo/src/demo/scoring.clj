@@ -68,3 +68,20 @@
     (if includeSpanScores
       (make-score total-prob probs)
       (make-score total-prob))))
+
+(defn get-standard-deviations
+  "Takes list of scores and returns a corresponding list of how many standard deviations the value is within."
+  [scores]
+  (let [mean (/ (apply + scores) (count scores))
+        differences (map #(- % mean) scores)
+        variance (/ (apply + (map #(Math/pow % 2) differences)) (count differences))
+        standard-dev (Math/sqrt variance)]
+    (map #(Math/ceil %) (map #(Math/abs %) (map #(/ % standard-dev) differences)))))
+
+(defn get-differences
+  "Returns list of differences of adjacent values in given list."
+  [scores]
+  (let [diffs []]
+    (for [i (range 0 (- (count scores) 1))] 
+      (conj diffs (- (get scores i) (get scores (+ i 1)))))))
+  
