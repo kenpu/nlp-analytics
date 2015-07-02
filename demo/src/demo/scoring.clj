@@ -76,7 +76,7 @@
         differences (map #(- % mean) scores)
         variance (/ (apply + (map #(Math/pow % 2) differences)) (count differences))
         standard-dev (Math/sqrt variance)]
-    (map #(Math/ceil %) (map #(Math/abs %) (map #(/ % standard-dev) differences)))))
+    (map #(/ % standard-dev) differences)))
 
 (defn get-differences
   "Returns list of differences of adjacent values in given list."
