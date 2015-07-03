@@ -37,13 +37,15 @@
         (let [sentence (param request :sentence)]
           (score-sentence sentence)))
   (POST "/score-maxent/" request
-        (let [sentence (param request :sentence)]
+        (let [sentence (param request :sentence)
+              scores (score-by-pos-maxent (tokenize sentence) "yes")]
           {:status 200
-           :body {:maxent (score-by-pos-maxent (tokenize sentence) "yes")}}))
+           :body {:maxent (assoc scores :deviations (get-standard-deviations (:spanScores scores)))}}))
   (POST "/score-perceptron/" request
-        (let [sentence (param request :sentence)]
+        (let [sentence (param request :sentence)
+              scores (score-by-pos-perceptron (tokenize sentence) "yes")]
           {:status 200
-           :body {:perceptron (score-by-pos-perceptron (tokenize sentence) "yes")}}))
+           :body {:perceptron (assoc scores :deviations (get-standard-deviations (:spanScores scores)))}}))
   (route/not-found "Not Found"))
 
 (def app
