@@ -28,13 +28,14 @@ var Reply = React.createClass({
 		var scoresView = [];
 		["blm_1", "blm_2", "blm_3", "blm_4", "blm_5"].forEach(function(blmName, idx) {
 			var blm = reply[blmName];
+			var deviation = blm.deviations;
 			var spanSize = blm.spanSize;
 			scoresView.push(<tr>{Words}</tr>);
 			blm.spanScores.forEach(function(score, wordIndex) {
 				if(typeof(score) != "number")
 					score = -1000
 				scoresView.push(makeRow({
-					content: (<span>{sprintf("%.3f",score)}</span>),
+					content: (<span>{sprintf("%.3f (%.3f)",score,deviation[wordIndex])}</span>),
 					offset: wordIndex,
 					colSpan: spanSize,
 					key: {wordIndex},
