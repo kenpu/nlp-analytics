@@ -4,7 +4,8 @@
             [compojure.handler :as handler]
             [ring.middleware.json :as middleware]
             [ring.util.response :as resp])
-  (:use sentence-scorer.evaluate))
+  (:use [sentence-scorer.evaluate]
+        [sentence-scorer.analysis]))
 
 (def root (str (System/getProperty "user.dir") "/resources/public"))
 (def lm (make-google-lm))
@@ -16,7 +17,7 @@
 
 (defn score-sentence
   "Returns n-gram scores of sentence for n 1 through 5"
-  [sentence]
+  [sentence]  
   (let [words (tokenize sentence)
         blm1 (score-by-blm {:words words :N 1 :lm lm})
         blm2 (score-by-blm {:words words :N 2 :lm lm})
