@@ -1,9 +1,13 @@
 (ns sentence-scorer.analysis)
 
-(defn get-mean
+(defn get-weighted-mean
   "Takes a list and returns the mean"
   [scores]
-  (/ (apply + scores) (count scores)))
+  (let [k (count scores)
+        W (repeat k 1)
+        terms (for [i (range k) :let [Wi (nth W i)]]
+                (* Wi (get scores i)))]
+    (/ (apply + terms) k)))
 
 (defn get-standard-deviations
   "Takes list of scores and returns a corresponding list of how many standard deviations the value is within."
@@ -13,15 +17,3 @@
         variance (/ (apply + (map #(Math/pow % 2) differences)) (count differences))
         standard-dev (Math/sqrt variance)]
     (map #(/ % standard-dev) differences)))
-
-(defn get-anomaly-data
-  "Returns number of dips and value of largest dip"
-  [scores]
-  (let [threshold -1.5]
-    {:num-dips (count (filter #(< % threshold) scores))
-     :max-dip (apply min scores)}))
-
-(defn get-sentence-score
-  "Returns a sentence's overall score"
-  [scores]
-  (get-mean (map get-mean scores)))
