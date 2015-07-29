@@ -6,10 +6,6 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [clojure-opennlp "0.3.3"]
                  [berkeleylm/berkeleylm "1.1.5"]
-                 [compojure "1.3.1"]
-                 [ring/ring-defaults "0.1.2"]
-                 [ring/ring-json "0.3.1"]
                  [io.aviso/pretty "0.1.17"]]
-  :plugins [[lein-ring "0.8.13"]]
-  :ring {:handler sentence-scorer.handler/app}
+  :main sentence-scorer.core
   :repl-options { :nrepl-middleware [io.aviso.nrepl/pretty-middleware] })
