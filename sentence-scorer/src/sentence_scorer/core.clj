@@ -1,6 +1,7 @@
 (ns sentence-scorer.core
   (:use [sentence-scorer.evaluate]
-        [sentence-scorer.analysis]))
+        [sentence-scorer.analysis])
+  (:require [clojure.string :as str]))
 
 (def lm (make-google-lm-fake))
 
@@ -8,6 +9,13 @@
   "Takes a sentence and returns score vector"
   [sentence]
   (get-sentence-vectors (get-n-grams lm sentence)))
+
+(defn get-file-lines
+  "Takes a filename and returns the file's sentences"
+  [filename]
+  (let [content (slurp filename)]
+    ;;Split on commas and periods followed by whitespace
+    (str/split content #",\s|\.\s"))) 
 
 (defn -main
   [& args]
