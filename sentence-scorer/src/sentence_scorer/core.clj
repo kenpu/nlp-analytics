@@ -3,7 +3,7 @@
         [sentence-scorer.analysis])
   (:require [clojure.string :as str]))
 
-(def lm (make-google-lm))
+(def lm (make-google-lm-fake))
 (def directory "resources/public/")
 
 (defn score-sentence
@@ -27,17 +27,25 @@
 
 (defn -main
   [& args]
-  (loop [userChoice "1"]
-    (if (= userChoice "0")
-      (println "Exiting. Goodbye!")
-      (do 
-        (println "Enter two sentences to compare:")
-        (let [s1 (read-line)
-              score1 (vec (score-sentence s1))
-              s2 (read-line)
-              score2 (vec (score-sentence s2))]
-          (println (str "Sentence 1: " score1))
-          (println (str "Sentence 2: " score2))
-          (println (str "Comparator: " (compare score1 score2))))
-        (println "Enter 1 to evaluate again, 0 to quit:")
-        (recur (read-line))))))
+  (println "Enter 1 to evaluate sentences, 2 to evaluate a file, 0 to quit:")
+  (loop [userChoice (read-line)]
+    (case userChoice
+      "0" (println "Exiting. Goodbye!")
+      "1" (do 
+            (println "Enter two sentences to compare:")
+            (let [s1 (read-line)
+                 score1 (vec (score-sentence s1))
+                 s2 (read-line)
+                  score2 (vec (score-sentence s2))]
+              (println (str "Sentence 1: " score1))
+              (println (str "Sentence 2: " score2))
+              (println (str "Comparator: " (compare score1 score2))))
+            (println "Enter 1 to evaluate sentences, 2 to evaluate a file, 0 to quit:")
+            (recur (read-line)))
+      "2" (do
+            (println "Enter filename")
+            (let [filename (read-line)
+                  score-map (score-file filename)]
+              (println (str score-map)))
+            (println "Enter 1 to evaluate sentences, 2 to evaluate a file, 0 to quit:")
+            (recur (read-line))))))
