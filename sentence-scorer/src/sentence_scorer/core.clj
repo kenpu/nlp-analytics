@@ -4,6 +4,7 @@
   (:require [clojure.string :as str]))
 
 (def lm (make-google-lm))
+(def directory "resources/public/")
 
 (defn score-sentence
   "Takes a sentence and returns score vector"
@@ -15,7 +16,14 @@
   [filename]
   (let [content (slurp filename)]
     ;;Split on commas and periods followed by whitespace
-    (str/split content #",\s|\.\s"))) 
+    (str/split content #",\s|\.\s+"))) 
+
+(defn score-file
+  "Takes a filename and returns the scores for the sentences"
+  [filename]
+  (let [file-path (str directory filename)
+        lines (get-file-lines file-path)]
+    (zipmap lines (map score-sentence lines))))
 
 (defn -main
   [& args]
