@@ -3,7 +3,7 @@
         [sentence-scorer.analysis])
   (:require [clojure.string :as str]))
 
-(def lm (make-google-lm-fake))
+(def lm (make-google-lm))
 
 (defn score-sentence
   "Takes a sentence and returns score vector"
