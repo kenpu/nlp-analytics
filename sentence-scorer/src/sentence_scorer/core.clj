@@ -25,8 +25,8 @@
         lines (get-file-lines file-path)]
     (zipmap lines (map score-sentence lines))))
 
-(defn -main
-  [& args]
+(defn user-loop
+  []
   (println "Enter 1 to evaluate sentences, 2 to evaluate a file, 0 to quit:")
   (loop [userChoice (read-line)]
     (case userChoice
@@ -49,3 +49,10 @@
               (println (str score-map)))
             (println "Enter 1 to evaluate sentences, 2 to evaluate a file, 0 to quit:")
             (recur (read-line))))))
+
+(defn -main
+  [& args]
+  (if (= (count args) 0)
+    (user-loop)
+    (let [score-maps (map score-file args)]
+      (println score-maps))))
