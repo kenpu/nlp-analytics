@@ -3,7 +3,7 @@
         [sentence-scorer.analysis])
   (:require [clojure.string :as str]))
 
-(def lm (make-google-lm))
+(def lm (make-google-lm-fake))
 (def directory "resources/public/")
 
 (defn score-sentence
@@ -55,4 +55,7 @@
   (if (= (count args) 0)
     (user-loop)
     (let [score-maps (map score-file args)]
-      (println score-maps))))
+      (doseq [i score-maps]
+        (println (str i "\n"))))))
+    
+    
